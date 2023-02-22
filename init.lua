@@ -26,7 +26,15 @@ local config = {
   },
 
   -- Set colorscheme to use
-  colorscheme = "default_theme",
+  -- colorscheme = "default_theme",
+  -- colorscheme = "tokyonight-night",
+  -- colorscheme = "tokyonight-storm",
+  -- colorscheme = "tokyonight-day",
+  -- colorscheme = "tokyonight-moon",
+  -- colorscheme = "catppuccin",
+  -- catppuccin-latte, catppuccin-frappe, catppuccin-macchiato, catppuccin-mocha
+  -- colorscheme = "sonokai",
+  colorscheme = "material",
 
   -- Add highlight groups in any theme
   highlights = {
@@ -57,9 +65,10 @@ local config = {
       status_diagnostics_enabled = true, -- enable diagnostics in statusline
       icons_enabled = true, -- disable icons in the UI (disable if no nerd font is available, requires :PackerSync after changing)
       ui_notifications_enabled = true, -- disable notifications when toggling UI elements
-      heirline_bufferline = true, -- enable new heirline based bufferline (requires :PackerSync after changing)
+      heirline_bufferline = false, -- enable new heirline based bufferline (requires :PackerSync after changing)
     },
   },
+
   -- If you need more control, you can use the function()...end notation
   -- options = function(local_vim)
   --   local_vim.opt.relativenumber = true
@@ -167,8 +176,11 @@ local config = {
       },
     },
     -- add to the global LSP on_attach function
-    -- on_attach = function(client, bufnr)
-    -- end,
+    on_attach = function(client, buffer)
+      if client.name == "yamlls" then
+        client.server_capabilities.document_formatting = true
+      end
+    end,
 
     -- override the mason server-registration function
     -- server_registration = function(server, opts)
@@ -223,6 +235,10 @@ local config = {
 
       -- You can also add new plugins here as well:
       -- Add plugins, the packer syntax without the "use"
+      { "folke/tokyonight.nvim" },
+      { "catppuccin/nvim" },
+      { "sainnhe/sonokai" },
+      { "marko-cerovac/material.nvim" },
       -- { "andweeb/presence.nvim" },
       -- {
       --   "ray-x/lsp_signature.nvim",
@@ -239,6 +255,15 @@ local config = {
       --     require("lsp_signature").setup()
       --   end,
       -- },
+      {
+        "kylechui/nvim-surround",
+        tag = "*", -- Use for stability; omit to use `main` branch for the latest features
+        config = function()
+          require("nvim-surround").setup({
+            -- Configuration here, or leave empty to use defaults
+          })
+        end
+      }
     },
     -- All other entries override the require("<key>").setup({...}) call for default plugins
     ["null-ls"] = function(config) -- overrides `require("null-ls").setup(config)`
